@@ -99,7 +99,7 @@ if not os.path.exists(pcse_db_file):
         logger.warn(msg2)
 
 if not __stable__:
-    print "Warning: You are running a PCSE development version:  %s" % __version__
+    print "Info: You are running a PCSE development version:  %s" % __version__
 
 def test(dsn=None):
     """Run all available tests for PCSE."""

@@ -138,4 +138,5 @@ crop_finish = "CROP_FINISH"
 terminate = "TERMINATE"
 output = "OUTPUT"
 summary_output = "SUMMARY_OUTPUT"
-
+irrigate = "IRRIGATE"
+npk_application = "NPK_APPLICATION"

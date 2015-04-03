@@ -150,3 +150,34 @@ class AgroManagementSingleCrop(AncillaryObject):
 
         self.in_crop_cycle = False
         self._send_signal(signal=signals.terminate)
+
+
+class AgroManagementSimpleEvents(AncillaryObject):
+    """Simple agromanagement class for demonstrating events.
+    """
+
+    class Parameters(ParamTemplate):
+        NPKApplicationTable = Instance(dict)
+        IrrigationApplicationTable = Instance(dict)
+
+    def initialize(self, day, kiosk, mconf, parameterprovider):
+        """
+        :param day: start date of the simulation
+        :param kiosk: variable kiosk of this PCSE model instance
+        :param mconf: ConfigurationLoader instance
+        :param parameterprovider: `ParameterProvider` object providing parameters as
+                key/value pairs
+        """
+        self.params = self.Parameters(parameterprovider)
+        self.kiosk = kiosk
+
+    def __call__(self, day, drv):
+
+        p = self.params
+        if day in p.NPKApplicationTable:
+            npk = p.NPKApplicationTable.pop(day)
+            self._send_signal(signal=signals.npk_application, day=day, NPK_amount=npk)
+
+        if day in p.IrrigationApplicationTable:
+            irrigation = p.IrrigationApplicationTable.pop(day)
+            self._send_signal(signal=signals.irrigate, day=day, irrigation_amount=irrigation)
