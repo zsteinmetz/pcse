@@ -79,6 +79,7 @@ class WOFOST_Assimilation(SimulationObject):
         KDIFTB = AfgenTrait()
         TMPFTB = AfgenTrait()
         TMNFTB = AfgenTrait()
+        YLDGAPF = Float()
 
     def initialize(self, day, kiosk, parvalues):
         """
@@ -98,6 +99,9 @@ class WOFOST_Assimilation(SimulationObject):
             PGASS = self.___call__fortran(day, drv)
         else:
             PGASS = self.__call__python(day, drv)
+
+        # Empirical reduction for yield gap factor
+        PGASS *= self.params.YLDGAPF
 
         return PGASS
 
