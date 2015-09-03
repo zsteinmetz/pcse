@@ -1067,17 +1067,17 @@ class WeatherDataContainer(SlotPickleMixin):
               "LON": (-180., 180.),
               "ELEV": (-300, 6000),
               "IRRAD": (0., 40e6),
-              "TMIN": (-50., 50.),
-              "TMAX": (-50., 50.),
-              "VAP": (0.06, 123.4),  # hPa, computed as sat. vapour pressure at -50, 50 Celsius
+              "TMIN": (-50., 60.),
+              "TMAX": (-50., 60.),
+              "VAP": (0.06, 199.3),  # hPa, computed as sat. vapour pressure at -50, 50 Celsius
               "RAIN": (0, 25),
               "E0": (0., 2.),
               "ES0": (0., 2.),
               "ET0": (0., 2.),
               "WIND": (0., 100.),
               "SNOWDEPTH": (0., 250.),
-              "TEMP": (-50., 50.),
-              "TMINRA": (-50., 50.)}
+              "TEMP": (-50., 60.),
+              "TMINRA": (-50., 60.)}
 
     def __init__(self, *args, **kwargs):
 
