@@ -1076,8 +1076,8 @@ class WeatherDataContainer(SlotPickleMixin):
               "ET0": (0., 2.),
               "WIND": (0., 100.),
               "SNOWDEPTH": (0., 250.),
-              "TEMP": (-50., 50.),
-              "TMINRA": (-50., 50.)}
+              "TEMP": (-50., 60.),
+              "TMINRA": (-50., 60.)}
 
     def __init__(self, *args, **kwargs):
 
