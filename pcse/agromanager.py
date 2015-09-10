@@ -458,7 +458,7 @@ class StateEventsDispatcher(HasTraits, DispatcherObject):
 
 
     def _zero_condition_falling(self, current_state, state, keywords, zero_condition_sign):
-        sign = cmp(current_state - state, 0)
+        sign = (current_state - state > 0) - (current_state - state < 0)
 
         # is None: e.g. called the first time and zero_condition_sign is not yet calculated
         if zero_condition_sign is None:
@@ -472,7 +472,7 @@ class StateEventsDispatcher(HasTraits, DispatcherObject):
         return sign
 
     def _zero_condition_rising(self, current_state, state, kwargs, zero_condition_sign):
-        sign = cmp(current_state - state, 0)
+        sign = (current_state - state > 0) - (current_state - state < 0)
 
         # is None: e.g. called the first time and zero_condition_sign is not yet calculated
         if zero_condition_sign is None:
@@ -486,7 +486,7 @@ class StateEventsDispatcher(HasTraits, DispatcherObject):
         return sign
 
     def _zero_condition_either(self, current_state, state, keywords, zero_condition_sign):
-        sign = cmp(current_state - state, 0)
+        sign = (current_state - state > 0) - (current_state - state < 0)
 
         # is None: e.g. called the first time and zero_condition_sign is not yet calculated
         if zero_condition_sign is None:
