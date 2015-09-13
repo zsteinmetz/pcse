@@ -15,7 +15,7 @@ from .phenology import DVS_Phenology as Phenology
 from .assimilation import WOFOST_Assimilation2 as Assimilation
 from .partitioning import DVS_Partitioning as Partitioning
 from .respiration import WOFOST_Maintenance_Respiration as MaintenanceRespiration
-from .evapotranspiration import Evapotranspiration
+from .evapotranspiration import Evapotranspiration2 as Evapotranspiration
 from .stem_dynamics import WOFOST_Stem_Dynamics as Stem_Dynamics
 from .root_dynamics import WOFOST_Root_Dynamics as Root_Dynamics
 from .leaf_dynamics import WOFOST_Leaf_Dynamics as Leaf_Dynamics
@@ -26,12 +26,12 @@ from .storage_organ_dynamics import WOFOST_Storage_Organ_Dynamics as \
 class Wofost(SimulationObject):
     """Top level object organizing the different components of the WOFOST crop
     simulation.
-            
+
     The CropSimulation object organizes the different processes of the crop
     simulation. Moreover, it contains the parameters, rate and state variables
     which are relevant at the level of the entire crop. The processes that are
     implemented as embedded simulation objects consist of:
-    
+
         1. Phenology (self.pheno)
         2. Partitioning (self.part)
         3. Assimilation (self.assim)
@@ -43,7 +43,7 @@ class Wofost(SimulationObject):
         9. Storage organ dynamics (self.so_dynamics)
 
     **Simulation parameters:**
-    
+
     ======== =============================================== =======  ==========
      Name     Description                                     Type     Unit
     ======== =============================================== =======  ==========
@@ -53,8 +53,8 @@ class Wofost(SimulationObject):
     CVR      Conversion factor for assimilates to roots        SCr     -
     CVS      Conversion factor for assimilates to stems        SCr     -
     ======== =============================================== =======  ==========
-    
-    
+
+
     **State variables:**
 
     =========== ================================================= ==== ===============
@@ -67,12 +67,12 @@ class Wofost(SimulationObject):
     HI          Harvest Index (only calculated during              N    -
                 `finalize()`)
     DOF         Date representing the day of finish of the crop    N    -
-                simulation. 
+                simulation.
     FINISH_TYPE String representing the reason for finishing the   N    -
                 simulation: maturity, harvest, leave death, etc.
     =========== ================================================= ==== ===============
 
- 
+
      **Rate variables:**
 
     =======  ================================================ ==== =============
@@ -90,7 +90,7 @@ class Wofost(SimulationObject):
     =======  ================================================ ==== =============
 
     """
-    
+
     # sub-model components for crop simulation
     pheno = Instance(SimulationObject)
     part  = Instance(SimulationObject)
@@ -101,7 +101,7 @@ class Wofost(SimulationObject):
     st_dynamics = Instance(SimulationObject)
     ro_dynamics = Instance(SimulationObject)
     so_dynamics = Instance(SimulationObject)
-    
+
     # Parameters, rates and states which are relevant at the main crop
     # simulation level
     class Parameters(ParamTemplate):
@@ -135,11 +135,11 @@ class Wofost(SimulationObject):
         :param parvalues: `ParameterProvider` object providing parameters as
                 key/value pairs
         """
-        
+
         self.params = self.Parameters(parvalues)
         self.rates  = self.RateVariables(kiosk, publish=["DMI","ADMI"])
         self.kiosk = kiosk
-        
+
         # Initialize components of the crop
         self.pheno = Phenology(day, kiosk, parvalues)
         self.part  = Partitioning(day, kiosk, parvalues)
@@ -166,7 +166,7 @@ class Wofost(SimulationObject):
         if abs(checksum) > 0.0001:
             msg = "Error in partitioning of initial biomass (TDWI)!"
             raise exc.PartitioningError(msg)
-            
+
         # assign handler for CROP_FINISH signal
         self._connect_signal(self._on_CROP_FINISH, signal=signals.crop_finish)
     #---------------------------------------------------------------------------
@@ -258,7 +258,7 @@ class Wofost(SimulationObject):
 
         # Partitioning
         self.part.integrate(day)
-        
+
         # Integrate states on leaves, storage organs, stems and roots
         self.ro_dynamics.integrate(day)
         self.so_dynamics.integrate(day)
@@ -270,13 +270,13 @@ class Wofost(SimulationObject):
                       self.kiosk["TWST"] + \
                       self.kiosk["TWSO"]
 
-        # total gross assimilation and maintenance respiration 
+        # total gross assimilation and maintenance respiration
         states.GASST += rates.GASS
         states.MREST += rates.MRES
-        
+
         # total crop transpiration (CTRAT)
         states.CTRAT += self.kiosk["TRA"]
-        
+
     #---------------------------------------------------------------------------
     @prepare_states
     def finalize(self, day):
@@ -288,7 +288,7 @@ class Wofost(SimulationObject):
             msg = "Cannot calculate Harvest Index because TAGP=0"
             self.logger.warning(msg)
             self.states.HI = -1.
-        
+
         SimulationObject.finalize(self, day)
 
     #---------------------------------------------------------------------------
