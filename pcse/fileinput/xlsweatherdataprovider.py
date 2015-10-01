@@ -76,10 +76,11 @@ class ExcelWeatherDataProvider(WeatherDataProvider):
     label_row = 10
     data_start_row = 12
 
-    def __init__(self, xls_fname, missing_snow_depth=None):
+    def __init__(self, xls_fname, ETmodel='PM', missing_snow_depth=None):
         WeatherDataProvider.__init__(self)
 
         self.fp_xls_fname = os.path.abspath(xls_fname)
+        self.ETmodel = ETmodel
         self.missing_snow_depth = missing_snow_depth
         if not os.path.exists(self.fp_xls_fname):
             msg = "Cannot find weather file at: %s" % self.fp_xls_fname
@@ -156,7 +157,7 @@ class ExcelWeatherDataProvider(WeatherDataProvider):
 
                 # Reference ET in mm/day
                 e0, es0, et0 = reference_ET(LAT=self.latitude, ELEV=self.elevation, ANGSTA=self.angstA,
-                                            ANGSTB=self.angstB, **d)
+                                            ANGSTB=self.angstB, ETMODEL=self.ETmodel, **d)
                 # convert to cm/day
                 d["E0"] = e0/10.; d["ES0"] = es0/10.; d["ET0"] = et0/10.
 
